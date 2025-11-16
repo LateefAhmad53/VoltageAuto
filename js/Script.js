@@ -42,9 +42,11 @@ overlay.addEventListener('click', () => {
 
     // Gallery images per car (3–5 images)
     const carGalleries = {
-        1: ['car1-main.jpg', 'car1-1.jpg', 'car1-2.jpg', 'car1-3.jpg', 'car1-4.jpg'],
-        2: ['car2-main.jpg', 'car2-1.jpg', 'car2-2.jpg', 'car2-3.jpg'],
-        3: ['car3-main.jpg', 'car3-1.jpg', 'car3-2.jpg', 'car3-3.jpg', 'car3-4.jpg', 'car3-5.jpg'],
+        1: ['car1-main.jpg', 'car1-1.jpg', 'car1-2.jpg', 'car1-3.jpg', 'car1-4.jpg', 'car1-5.jpg', 'car1-6.jpg', 'car1-7.jpg', 'car1-8.jpg'],
+        2: ['car2-main.jpg', 'car2-1.jpg', 'car2-2.jpg', 'car2-3.jpg', 'car2-4.jpg', 'car2-5.jpg', 'car2-6.jpg', 'car2-7.jpg', 'car2-8.jpg', 'car2-9.jpg', 'car2-10.jpg', 'car2-11.jpg'],
+        3: ['car3-main.jpg', 'car3-1.jpg', 'car3-2.jpg', 'car3-3.jpg', 'car3-4.jpg', 'car3-5.jpg',
+        'car3-6.jpg', 'car3-7.jpg', 'car3-8.jpg', 'car3-9.jpg',
+        ],
         4: ['car4-main.jpg', 'car4-1.jpg', 'car4-2.jpg', 'car4-3.jpg'],
         5: ['car5-main.jpg', 'car5-1.jpg', 'car5-2.jpg', 'car5-3.jpg', 'car5-4.jpg'],
         6: ['car6-main.jpg', 'car6-1.jpg', 'car6-2.jpg', 'car6-3.jpg'],
