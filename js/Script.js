@@ -3,28 +3,32 @@
 /* Mobile Menu | Lightbox Gallery | Form Validation | Animations */
 
 document.addEventListener('DOMContentLoaded', () => {
-    /* ============================================================= */
-    /* 1. MOBILE MENU TOGGLE */
-    /* ============================================================= */
-    const hamburger = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const overlay = document.querySelector('.overlay');
-    if (!overlay) {
-        console.error('overlay not found in HTML');
-    }
+    /* /* ============================================================= */
+/* 1. MOBILE MENU TOGGLE */
+/* ============================================================= */
+const hamburger = document.querySelector('.hamburger');
+const mobileMenu = document.querySelector('.mobile-menu');
 
-    const toggleMobileMenu = () => {
-        mobileMenu.classList.toggle('open');
-        overlay.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    };
+// Create overlay dynamically
+const overlay = document.createElement('div');
+overlay.className = 'overlay';
+document.body.appendChild(overlay);
 
-    hamburger.addEventListener('click', toggleMobileMenu);
-    overlay.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-        overlay.classList.remove('active');
-        hamburger.classList.remove('active');
-    });
+const toggleMobileMenu = () => {
+    mobileMenu.classList.toggle('open');
+    overlay.classList.toggle('active');
+    hamburger.classList.toggle('active');
+};
+
+// Click hamburger
+hamburger.addEventListener('click', toggleMobileMenu);
+
+// Click overlay to close
+overlay.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    overlay.classList.remove('active');
+    hamburger.classList.remove('active');
+});
 
     /* ============================================================= */
     /* 2. LIGHTBOX GALLERY SYSTEM (Per-Car, Full Navigation) */
