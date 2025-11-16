@@ -138,7 +138,7 @@ p {
     width: 100%;
 }
 
-/* Hamburger */
+/* Hamburger - HIDDEN by default, SHOWN on mobile */
 .hamburger {
     display: none;
     flex-direction: column;
@@ -151,7 +151,7 @@ p {
     width: 25px;
     height: 3px;
     background: #fff;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     border-radius: 2px;
 }
 
@@ -161,12 +161,14 @@ p {
     top: 0;
     left: -100%;
     width: 280px;
+    max-width: 80vw;
     height: 100vh;
     background: #1d3557;
     padding: 5rem 2rem 2rem;
     transition: left 0.4s ease;
     z-index: 999;
     overflow-y: auto;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .mobile-menu ul {
@@ -709,14 +711,14 @@ footer {
 }
 
 @media (max-width: 768px) {
-    /* Show hamburger */
+    /* SHOW HAMBURGER ON MOBILE */
     .hamburger {
-        display: flex;
+        display: flex !important;
     }
 
-    /* Hide desktop menu */
+    /* HIDE DESKTOP MENU */
     .nav-menu {
-        display: none;
+        display: none !important;
     }
 
     /* Hero */
