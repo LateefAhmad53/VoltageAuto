@@ -8,9 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ============================================================= */
     const hamburger = document.querySelector('.hamburger');
     const mobileMenu = document.querySelector('.mobile-menu');
-    const overlay = document.createElement('div');
-    overlay.className = 'overlay';
-    document.body.appendChild(overlay);
+    const overlay = document.querySelector('.overlay');
+    if (!overlay) {
+        console.error('overlay not found in HTML');
+    }
 
     const toggleMobileMenu = () => {
         mobileMenu.classList.toggle('open');
