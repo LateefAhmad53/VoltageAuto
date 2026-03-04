@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cars for Sale - VoltageAuto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .catalog-hero {
+        background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%);
+        color: white;
+        padding: 72px 0 54px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .catalog-hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.16), transparent 40%);
+        pointer-events: none;
+    }
+
+    .catalog-hero .container-lg {
+        position: relative;
+        z-index: 1;
+    }
+
+    .filters-section {
+        margin-top: -28px;
+        position: relative;
+        z-index: 2;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="catalog-hero">
+    <div class="container-lg">
+        <h1 style="font-size: 2.8rem; font-weight: 800; margin-bottom: 0.8rem;">Discover Premium Vehicles</h1>
+        <p style="font-size: 1.08rem; opacity: 0.95; margin: 0;">Filter by condition, fuel type, and pricing to find your perfect match.</p>
+    </div>
+</section>
+
+<section class="filters-section container-lg my-5">
+    <div class="row section-shell p-4">
+        <div class="col-lg-3">
+            <div class="filter-group">
+                <label>Search</label>
+                <input type="text" id="search" placeholder="Search cars..." class="filter-input">
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="filter-group">
+                <label>Condition</label>
+                <select id="condition" class="filter-select">
+                    <option value="">All Conditions</option>
+                    <option value="brand_new">Brand New</option>
+                    <option value="tokunbo">Tokunbo</option>
+                    <option value="nigerian_used">Nigerian Used</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="filter-group">
+                <label>Fuel Type</label>
+                <select id="fuel-type" class="filter-select">
+                    <option value="">All Fuel Types</option>
+                    <option value="petrol">Petrol</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="sort" class="filter-select">
+                    <option value="-created_at">Latest</option>
+                    <option value="price">Price: Low to High</option>
+                    <option value="-price">Price: High to Low</option>
+                    <option value="-year">Year: Newest First</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container-lg py-5">
+    <div class="section-title">
+        <h2>Browse Our Inventory</h2>
+        <p>Find the perfect car for you</p>
+    </div>
+
+    <div class="row" id="products-container">
+        <!-- Products loaded here -->
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center" id="pagination">
+            <!-- Pagination loaded here -->
+        </ul>
+    </nav>
+</section>
+
+<script>
+    let currentPage = 1;
+    const pageSize = 12;
+    let filters = {};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProducts();
+        setupFilters();
+    });
+
+    function setupFilters() {
+        document.getElementById('search').addEventListener('input', debounce(() => {
+            currentPage = 1;
+            loadProducts();
+        }, 500));
+
+        ['condition', 'fuel-type', 'sort'].forEach(id => {
+            document.getElementById(id).addEventListener('change', () => {
+                currentPage = 1;
+                loadProducts();
+            });
+        });
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    async function loadProducts() {
+        const params = new URLSearchParams();
+        
+        const search = document.getElementById('search').value;
+        const condition = document.getElementById('condition').value;
+        const fuelType = document.getElementById('fuel-type').value;
+        const sort = document.getElementById('sort').value;
+
+        if (search) params.append('search', search);
+        if (condition) params.append('condition', condition);
+        if (fuelType) params.append('fuel_type', fuelType);
+        if (sort) params.append('ordering', sort);
+        params.append('page', currentPage);
+
+        try {
+            const response = await fetch(`/api/products/?${params}`);
+            const data = await response.json();
+            renderProducts(data.results);
+            renderPagination(data);
+        } catch (error) {
+            console.error('Error loading products:', error);
+        }
+    }
+
+    function renderProducts(products) {
+        const container = document.getElementById('products-container');
+        container.innerHTML = '';
+
+        if (products.length === 0) {
+            container.innerHTML = '<div class="col-12 text-center"><p>No cars found. Try adjusting your filters.</p></div>';
+            return;
+        }
+
+        products.forEach(product => {
+            const imageUrl = product.main_image?.image || '/static/placeholder.jpg';
+            const card = `
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="${imageUrl}" alt="${product.name}">
+                            ${product.featured ? '<span class="product-badge featured">⭐ Featured</span>' : ''}
+                            ${product.status === 'sold' ? '<span class="product-badge">SOLD</span>' : ''}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">${product.category.name}</div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar"></i> ${product.year}
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-tag"></i> ${product.condition.replace(/_/g, ' ').toUpperCase()}
+                                </div>
+                            </div>
+                            <div class="product-price">₦${parseFloat(product.price).toLocaleString('en-NG', {maximumFractionDigits: 0})}</div>
+                            <div class="product-footer">
+                                <a href="/products/${product.slug}/" class="btn-view">View Details</a>
+                                <button class="btn-buy-card" onclick="buyNowWhatsApp(decodeURIComponent('${encodeURIComponent(product.name)}'), '${product.year}', '${product.slug}')">
+                                    <i class="fab fa-whatsapp"></i> Buy Now
+                                </button>
+                                <button class="btn-inquiry" onclick="openInquiryModal('${product.id}', '${product.name}')">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += card;
+        });
+    }
+
+    function renderPagination(data) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        if (data.previous) {
+            pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(${currentPage - 1}); return false;">Previous</a></li>`;
+        }
+
+        if (data.next) {
+            pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(${currentPage + 1}); return false;">Next</a></li>`;
+        }
+    }
+
+    function goToPage(page) {
+        currentPage = page;
+        loadProducts();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function openInquiryModal(productId, productName) {
+        // Placeholder for inquiry modal
+        alert(`Inquiry for: ${productName}\nFeature coming soon!`);
+    }
+</script>
+{% endblock %}
+

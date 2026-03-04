@@ -1,0 +1,1 @@
+web: gunicorn voltageauto.wsgi --log-file -

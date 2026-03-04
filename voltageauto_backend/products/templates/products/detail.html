@@ -1,0 +1,517 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - {{ product.year }} - VoltageAuto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-detail-hero {
+        background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .breadcrumb-custom {
+        background: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-custom a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+    }
+
+    .breadcrumb-custom a:hover {
+        color: white;
+    }
+
+    .image-gallery {
+        position: relative;
+    }
+
+    .main-image {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin-bottom: 1rem;
+        background: #f0f0f0;
+    }
+
+    .thumbnails {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+    }
+
+    .thumbnail {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 3px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+    .thumbnail:hover, .thumbnail.active {
+        border-color: #0b7a75;
+        transform: scale(1.05);
+    }
+
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .spec-item {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .spec-item:hover {
+        background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%);
+        color: white;
+    }
+
+    .spec-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .spec-item:hover .spec-label {
+        color: rgba(255,255,255,0.8);
+    }
+
+    .spec-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+    }
+
+    .features-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .feature-item i {
+        font-size: 1.5rem;
+        color: #0b7a75;
+    }
+
+    .feature-item.disabled {
+        opacity: 0.5;
+    }
+
+    .feature-item.disabled i {
+        color: #ccc;
+    }
+
+    .action-buttons {
+        position: sticky;
+        bottom: 0;
+        background: linear-gradient(180deg, #ffffff 0%, #f6fbfc 100%);
+        padding: 1.5rem;
+        border: 1px solid rgba(11, 122, 117, 0.16);
+        border-top: 2px solid #e0e0e0;
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        border-radius: 14px;
+        box-shadow: 0 12px 28px rgba(19, 38, 59, 0.12);
+    }
+
+    .btn-buy {
+        flex: 1;
+        background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%);
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-buy:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(11, 122, 117, 0.3);
+    }
+
+    .btn-inquiry {
+        flex: 1;
+        background: white;
+        color: #0b7a75;
+        border: 2px solid #0b7a75;
+        padding: 1rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-inquiry:hover {
+        background: #0b7a75;
+        color: white;
+    }
+
+    .reviews-section {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e0e0e0;
+    }
+
+    .review-item {
+        background: linear-gradient(180deg, #ffffff 0%, #f5fbfc 100%);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(11, 122, 117, 0.1);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .review-author {
+        font-weight: 700;
+        color: #333;
+    }
+
+    .review-date {
+        font-size: 0.9rem;
+        color: #999;
+    }
+
+    .stars {
+        color: #ffc107;
+    }
+
+    @media (max-width: 768px) {
+        .main-image {
+            height: 300px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .specs-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if product %}
+<!-- Product Detail Header -->
+<section class="product-detail-hero">
+    <div class="container-lg">
+        <nav class="breadcrumb-custom" aria-label="breadcrumb">
+            <a href="/"><i class="fas fa-home"></i> Home</a>
+            <span style="margin: 0 0.5rem;">→</span>
+            <a href="/products/">Cars</a>
+            <span style="margin: 0 0.5rem;">→</span>
+            <span>{{ product.name }}</span>
+        </nav>
+    </div>
+</section>
+
+<div class="container-lg">
+    <div class="row">
+        <!-- Image Gallery -->
+        <div class="col-lg-6 mb-4">
+            <div class="image-gallery">
+                {% if product.main_image %}
+                    <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}" class="main-image" id="mainImage">
+                {% else %}
+                    <div class="main-image" style="display: flex; align-items: center; justify-content: center; color: #ccc;">
+                        <i class="fas fa-image" style="font-size: 5rem;"></i>
+                    </div>
+                {% endif %}
+                
+                {% if product.images.all %}
+                    <div class="thumbnails">
+                        {% for image in product.images.all %}
+                            <img 
+                                src="{{ image.image.url }}" 
+                                alt="{{ image.alt_text }}" 
+                                class="thumbnail {% if image.is_main %}active{% endif %}"
+                                onclick="changeMainImage(this)"
+                            >
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6">
+            <div class="product-info-section">
+                <span style="color: #0b7a75; font-weight: 600; text-transform: uppercase;">{{ product.category.name }}</span>
+                <h1 style="font-size: 2.5rem; font-weight: 800; margin: 1rem 0;">
+                    {{ product.name }}
+                </h1>
+
+                <!-- Status Badge -->
+                <div style="margin-bottom: 1.5rem;">
+                    {% if product.status == 'available' %}
+                        <span style="background: #28a745; color: white; padding: 8px 15px; border-radius: 20px; font-weight: 600;">
+                            <i class="fas fa-check-circle"></i> Available
+                        </span>
+                    {% elif product.status == 'sold' %}
+                        <span style="background: #dc3545; color: white; padding: 8px 15px; border-radius: 20px; font-weight: 600;">
+                            <i class="fas fa-times-circle"></i> Sold
+                        </span>
+                    {% else %}
+                        <span style="background: #ffc107; color: #333; padding: 8px 15px; border-radius: 20px; font-weight: 600;">
+                            <i class="fas fa-exclamation-circle"></i> Reserved
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Price -->
+                <div style="margin-bottom: 2rem;">
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">Price</div>
+                    <div style="font-size: 3rem; font-weight: 800; color: #0b7a75;">
+                        ₦{{ product.price|floatformat:0 }}
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; font-weight: 700;">Overview</h3>
+                    <p style="color: #666; line-height: 1.8;">{{ product.description }}</p>
+                </div>
+
+                <!-- Specifications -->
+                <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Specifications</h3>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <div class="spec-label"><i class="fas fa-calendar"></i> Year</div>
+                        <div class="spec-value">{{ product.year }}</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label"><i class="fas fa-tag"></i> Condition</div>
+                        <div class="spec-value" style="font-size: 1rem;">{{ product.get_condition_display }}</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label"><i class="fas fa-tachometer-alt"></i> Mileage</div>
+                        <div class="spec-value" style="font-size: 1rem;">{{ product.mileage }} km</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label"><i class="fas fa-gear"></i> Transmission</div>
+                        <div class="spec-value" style="font-size: 1rem;">{{ product.get_transmission_display|upper }}</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label"><i class="fas fa-gas-pump"></i> Fuel Type</div>
+                        <div class="spec-value" style="font-size: 1rem;">{{ product.get_fuel_type_display }}</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label"><i class="fas fa-paint-brush"></i> Color</div>
+                        <div class="spec-value" style="font-size: 1rem;">{{ product.color }}</div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <h3 style="margin-bottom: 1.5rem; margin-top: 2rem; font-weight: 700;">Features</h3>
+                <div class="features-list">
+                    <div class="feature-item {% if not product.has_ac %}disabled{% endif %}">
+                        <i class="fas fa-snowflake"></i>
+                        <span>Air Conditioning</span>
+                    </div>
+                    <div class="feature-item {% if not product.has_power_steering %}disabled{% endif %}">
+                        <i class="fas fa-steering-wheel"></i>
+                        <span>Power Steering</span>
+                    </div>
+                    <div class="feature-item {% if not product.has_abs %}disabled{% endif %}">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>ABS Brakes</span>
+                    </div>
+                    <div class="feature-item {% if not product.has_airbags %}disabled{% endif %}">
+                        <i class="fas fa-shield-virus"></i>
+                        <span>Airbags</span>
+                    </div>
+                    <div class="feature-item {% if not product.has_alloy_wheels %}disabled{% endif %}">
+                        <i class="fas fa-ring"></i>
+                        <span>Alloy Wheels</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="btn-buy" onclick="buyNowWhatsApp('{{ product.name|escapejs }}', '{{ product.year }}', '{{ product.slug }}')">
+            <i class="fas fa-shopping-cart"></i> Buy Now
+        </button>
+        <button class="btn-inquiry" onclick="handleInquiry('{{ product.id }}', '{{ product.name|escapejs }}')">
+            <i class="fas fa-envelope"></i> Inquire
+        </button>
+    </div>
+
+    <!-- Related Products -->
+    <section style="margin-top: 5rem;">
+        <div class="section-title">
+            <h2>Related Vehicles</h2>
+            <p>Other cars from the same category</p>
+        </div>
+        <div class="row" id="related-products">
+            <div class="col-12 text-center"><p>Loading...</p></div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    {% if product.reviews.all %}
+    <div class="reviews-section">
+        <h3 style="margin-bottom: 2rem; font-weight: 700;">Customer Reviews</h3>
+        {% for review in product.reviews.all %}
+            <div class="review-item">
+                <div class="review-header">
+                    <div>
+                        <div class="review-author">{{ review.name }}</div>
+                        <div class="stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="review-date">{{ review.created_at|date:"M d, Y" }}</div>
+                </div>
+                <p style="color: #666; margin: 0;">{{ review.comment }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function changeMainImage(thumbnail) {
+        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+        thumbnail.classList.add('active');
+        document.getElementById('mainImage').src = thumbnail.src;
+    }
+    function handleInquiry(productId, productName) {
+        const email = prompt('Enter your email address for inquiry:');
+        if (email) {
+            const phone = prompt('Enter your phone number:');
+            if (phone) {
+                const message = prompt('Brief message (optional):');
+                submitInquiry(productId, email, phone, message || '');
+            }
+        }
+    }
+
+    async function submitInquiry(productId, email, phone, message) {
+        try {
+            const response = await fetch('/api/inquiries/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product: productId,
+                    email: email,
+                    phone: phone,
+                    message: message,
+                    name: email.split('@')[0]
+                })
+            });
+            
+            if (response.ok) {
+                alert('Thank you! We have received your inquiry and will contact you soon.');
+            } else {
+                alert('Error submitting inquiry. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error submitting inquiry. Please try again.');
+        }
+    }
+
+    // Load related products
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/products/{{ product.slug }}/related/')
+            .then(response => response.json())
+            .then(products => {
+                const container = document.getElementById('related-products');
+                if (products.length === 0) {
+                    container.innerHTML = '<div class="col-12 text-center"><p>No related products found.</p></div>';
+                    return;
+                }
+                container.innerHTML = '';
+                products.forEach(product => {
+                    const imageUrl = product.main_image?.image || '/static/placeholder.jpg';
+                    const card = `
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="${imageUrl}" alt="${product.name}">
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">${product.category.name}</div>
+                                    <div class="product-name">${product.name}</div>
+                                    <div class="product-details">
+                                        <div class="detail-item">
+                                            <i class="fas fa-calendar"></i> ${product.year}
+                                        </div>
+                                    </div>
+                                    <div class="product-price">₦${parseFloat(product.price).toLocaleString('en-NG', {maximumFractionDigits: 0})}</div>
+                                    <div class="product-footer">
+                                        <a href="/products/${product.slug}/" class="btn-view">View Details</a>
+                                        <button class="btn-buy-card" onclick="buyNowWhatsApp(decodeURIComponent('${encodeURIComponent(product.name)}'), '${product.year}', '${product.slug}')">
+                                            <i class="fab fa-whatsapp"></i> Buy Now
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            })
+            .catch(error => console.error('Error loading related products:', error));
+    });
+</script>
+
+{% else %}
+<div class="container-lg py-5">
+    <div class="alert alert-danger" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> Product not found.
+        <a href="/products/">Back to products</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+

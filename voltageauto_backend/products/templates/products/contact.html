@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - VoltageAuto{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-card {
+        background: linear-gradient(180deg, #ffffff 0%, #f5fbfc 100%);
+        border: 1px solid rgba(11, 122, 117, 0.12);
+        box-shadow: 0 14px 30px rgba(20, 40, 64, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 60px 0;">
+    <div class="container-lg">
+        <h1>Contact Us</h1>
+        <p>Get in touch with VoltageAuto for inquiries about vehicles, services, or partnerships</p>
+    </div>
+</section>
+
+<section class="container-lg py-5">
+    <div class="row">
+        <!-- Contact Information -->
+        <div class="col-lg-4 mb-4">
+            <div class="contact-card" style="padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                <h3 style="font-weight: 700; margin-bottom: 1.5rem; color: #333;">Contact Information</h3>
+                
+                <div style="margin-bottom: 2rem;">
+                    <div style="font-weight: 600; color: #0b7a75; margin-bottom: 0.5rem;">
+                        <i class="fas fa-phone"></i> Phone
+                    </div>
+                    <p style="color: #666; margin: 0;">
+                        <a href="tel:+{{ whatsapp_number }}" style="color: #0b7a75; text-decoration: none;">+{{ whatsapp_number }}</a>
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <div style="font-weight: 600; color: #0b7a75; margin-bottom: 0.5rem;">
+                        <i class="fas fa-envelope"></i> Email
+                    </div>
+                    <p style="color: #666; margin: 0;">
+                        <a href="mailto:_ajayibabawale@gmail.com" style="color: #0b7a75; text-decoration: none;">_ajayibabawale@gmail.com</a>
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <div style="font-weight: 600; color: #0b7a75; margin-bottom: 0.5rem;">
+                        <i class="fas fa-whatsapp"></i> WhatsApp
+                    </div>
+                    <p style="color: #666; margin: 0;">
+                        <a href="https://wa.me/{{ whatsapp_number }}" target="_blank" style="color: #0b7a75; text-decoration: none;">Chat on WhatsApp</a>
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <div style="font-weight: 600; color: #0b7a75; margin-bottom: 0.5rem;">
+                        <i class="fas fa-map-marker-alt"></i> Location
+                    </div>
+                    <p style="color: #666; margin: 0;">
+                        Nigeria
+                    </p>
+                </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div style="background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%); padding: 2rem; border-radius: 15px; color: white;">
+                <h4 style="margin-bottom: 1rem; font-weight: 700;">Business Hours</h4>
+                <div style="font-size: 0.95rem;">
+                    <div style="margin-bottom: 0.8rem;">
+                        <strong>Monday - Friday:</strong> 8:00 AM - 6:00 PM
+                    </div>
+                    <div style="margin-bottom: 0.8rem;">
+                        <strong>Saturday:</strong> 9:00 AM - 5:00 PM
+                    </div>
+                    <div style="margin-bottom: 0.8rem;">
+                        <strong>Sunday:</strong> By Appointment
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-lg-8">
+            <div class="contact-card" style="padding: 2rem; border-radius: 15px;">
+                <h3 style="font-weight: 700; margin-bottom: 2rem; color: #333;">Send us a Message</h3>
+                
+                <form id="contactForm" method="POST" action="/contact/">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Full Name *</label>
+                            <input type="text" name="name" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Poppins', sans-serif; transition: border-color 0.3s ease;" placeholder="Your full name">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Email Address *</label>
+                            <input type="email" name="email" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Poppins', sans-serif; transition: border-color 0.3s ease;" placeholder="your@email.com">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Phone Number *</label>
+                        <input type="tel" name="phone" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Poppins', sans-serif; transition: border-color 0.3s ease;" placeholder="+234 xxx xxxx xxx">
+                    </div>
+
+                    <div class="mb-3">
+                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Subject *</label>
+                        <select name="subject" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Poppins', sans-serif;">
+                            <option value="">Select a subject</option>
+                            <option value="Car Inquiry">Car Inquiry</option>
+                            <option value="Service Request">Service Request</option>
+                            <option value="Rental">Rental</option>
+                            <option value="Repair">Repair</option>
+                            <option value="Affiliate">Affiliate Program</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Message *</label>
+                        <textarea name="message" rows="6" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Poppins', sans-serif; resize: vertical;" placeholder="Your message..."></textarea>
+                    </div>
+
+                    <button type="submit" style="background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: all 0.3s ease;">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+
+                <div id="successMessage" style="display: none; margin-top: 2rem; padding: 1rem; background: #d4edda; color: #155724; border-radius: 8px; border: 1px solid #c3e6cb;">
+                    <i class="fas fa-check-circle"></i> <strong>Success!</strong> Your message has been sent. We'll get back to you soon!
+                </div>
+
+                <div id="errorMessage" style="display: none; margin-top: 2rem; padding: 1rem; background: #f8d7da; color: #721c24; border-radius: 8px; border: 1px solid #f5c6cb;">
+                    <i class="fas fa-exclamation-circle"></i> <strong>Error!</strong> <span id="errorText"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section style="background: #f8f9fa; padding: 4rem 0; margin-top: 3rem;">
+    <div class="container-lg">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Find answers to common questions</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h5 style="font-weight: 700; color: #333; margin-bottom: 0.8rem;">
+                        <i class="fas fa-question-circle" style="color: #0b7a75;"></i> How can I inquire about a vehicle?
+                    </h5>
+                    <p style="color: #666; margin: 0;">Click on any car and fill the inquiry form, or contact us directly via WhatsApp or phone.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-3">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h5 style="font-weight: 700; color: #333; margin-bottom: 0.8rem;">
+                        <i class="fas fa-question-circle" style="color: #0b7a75;"></i> Do you offer financing options?
+                    </h5>
+                    <p style="color: #666; margin: 0;">Yes! Please contact us to discuss flexible payment plans and financing options.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-3">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h5 style="font-weight: 700; color: #333; margin-bottom: 0.8rem;">
+                        <i class="fas fa-question-circle" style="color: #0b7a75;"></i> What about vehicle warranty?
+                    </h5>
+                    <p style="color: #666; margin: 0;">All our vehicles come with warranty. Details vary by condition. Ask us for specifics.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-3">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                    <h5 style="font-weight: 700; color: #333; margin-bottom: 0.8rem;">
+                        <i class="fas fa-question-circle" style="color: #0b7a75;"></i> Can I trade-in my old car?
+                    </h5>
+                    <p style="color: #666; margin: 0;">Absolutely! We accept trade-ins. Contact us with your car details for a quote.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const phone = formData.get('phone');
+        const subject = formData.get('subject');
+        const message = formData.get('message');
+
+        // Send via API
+        fetch('/contact/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone,
+                subject: subject,
+                message: message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('contactForm').reset();
+                document.getElementById('errorMessage').style.display = 'none';
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorText').textContent = data.message || 'Error sending message. Please try again.';
+            }
+        })
+        .catch(error => {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorText').textContent = 'Error: ' + error;
+        });
+    });
+</script>
+{% endblock %}
+

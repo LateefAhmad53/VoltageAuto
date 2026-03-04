@@ -1,0 +1,413 @@
+{% extends 'base.html' %}
+
+{% block title %}Vehicle Sales, Repairs, Licensing & Rental | VoltageAuto{% endblock %}
+
+{% block content %}
+<style>
+    .page-hero {
+        background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        animation: fadeInDown 0.8s ease-out;
+    }
+
+    .page-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .page-hero p {
+        font-size: 1.3rem;
+        margin-bottom: 0;
+        opacity: 0.95;
+    }
+
+    .services-grid {
+        padding: 80px 20px;
+        background: #f8f9fa;
+    }
+
+    .services-grid .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .services-grid h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 60px;
+        color: #333;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .services-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+
+    .service-card {
+        background: white;
+        padding: 40px 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(11, 122, 117, 0.12);
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(11, 122, 117, 0.15);
+        border-top: 4px solid #0b7a75;
+    }
+
+    .service-card i {
+        font-size: 3.5rem;
+        color: #0b7a75;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .service-card h3 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .service-card p {
+        color: #666;
+        line-height: 1.8;
+        font-size: 0.95rem;
+    }
+
+    /* Services Details Section */
+    .services-detail {
+        padding: 80px 20px;
+        background: white;
+    }
+
+    .services-detail .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .detail-section {
+        margin-bottom: 80px;
+    }
+
+    .detail-section:nth-child(odd) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    .detail-section:nth-child(even) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    .detail-section:nth-child(even) .detail-content {
+        order: 2;
+    }
+
+    .detail-section:nth-child(even) .detail-icon {
+        order: 1;
+    }
+
+    .detail-icon {
+        font-size: 5rem;
+        color: #0b7a75;
+        text-align: center;
+        padding: 40px;
+    }
+
+    .detail-content h3 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .detail-content p {
+        color: #666;
+        line-height: 1.9;
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+
+    .detail-content {
+        background: linear-gradient(180deg, #ffffff 0%, #f6fbfc 100%);
+        border: 1px solid rgba(11, 122, 117, 0.1);
+        border-radius: 14px;
+        padding: 28px;
+        box-shadow: 0 10px 26px rgba(19, 38, 59, 0.08);
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
+
+    .feature-list li {
+        padding: 10px 0;
+        color: #555;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+    }
+
+    .feature-list li:last-child {
+        border-bottom: none;
+    }
+
+    .feature-list li:before {
+        content: '✓';
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        background: #0b7a75;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 25px;
+        margin-right: 12px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    /* CTA Section */
+    .services-cta {
+        background: linear-gradient(135deg, #0b7a75 0%, #123b63 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+    }
+
+    .services-cta .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .services-cta h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    .services-cta p {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+
+    .btn-services {
+        display: inline-block;
+        padding: 15px 40px;
+        background: white;
+        color: #0b7a75;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin: 10px;
+    }
+
+    .btn-services:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .page-hero h1 {
+            font-size: 2rem;
+        }
+
+        .detail-section:nth-child(odd),
+        .detail-section:nth-child(even) {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-section:nth-child(even) .detail-content,
+        .detail-section:nth-child(even) .detail-icon {
+            order: unset;
+        }
+
+        .services-grid h2 {
+            font-size: 1.8rem;
+        }
+
+        .service-card {
+            padding: 30px 20px;
+        }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="page-hero">
+    <div class="container">
+        <h1>Our Services</h1>
+        <p>Complete automotive solutions under one roof</p>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="services-grid">
+    <div class="container">
+        <h2>What We Offer</h2>
+        <div class="services-container">
+            <div class="service-card">
+                <i class="fas fa-car"></i>
+                <h3>Vehicle Sales</h3>
+                <p>Sales of brand new, foreign used, and locally used vehicles. All inspected and verified.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-tools"></i>
+                <h3>Repairs & Maintenance</h3>
+                <p>Expert mechanical and body repairs with genuine parts and warranty.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>Licensing & Documentation</h3>
+                <p>Vehicle registration, insurance, change of ownership, and customs clearance.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-bus"></i>
+                <h3>Vehicle & Bus Rental</h3>
+                <p>Short and long-term rental with airport pickup and drop-off services.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Detailed Services -->
+<section class="services-detail">
+    <div class="container">
+        <!-- Vehicle Sales Detail -->
+        <div class="detail-section">
+            <div class="detail-icon">
+                <i class="fas fa-car"></i>
+            </div>
+            <div class="detail-content">
+                <h3>Vehicle Sales</h3>
+                <p>We provide a wide range of vehicles to suit every budget and preference. Our inventory includes brand new vehicles from top manufacturers, foreign-used vehicles (Tokunbo), and well-maintained locally-used vehicles.</p>
+                <ul class="feature-list">
+                    <li>Professional vehicle inspection</li>
+                    <li>Transparent pricing</li>
+                    <li>Flexible payment options</li>
+                    <li>Full documentation</li>
+                    <li>Warranty options available</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Repairs & Maintenance Detail -->
+        <div class="detail-section">
+            <div class="detail-icon">
+                <i class="fas fa-wrench"></i>
+            </div>
+            <div class="detail-content">
+                <h3>Repairs & Maintenance</h3>
+                <p>Our expert technicians provide comprehensive repair and maintenance services to keep your vehicle in perfect condition. We use only genuine parts and modern diagnostic equipment.</p>
+                <ul class="feature-list">
+                    <li>Engine repairs and overhaul</li>
+                    <li>Transmission services</li>
+                    <li>Electrical system repairs</li>
+                    <li>Body work and painting</li>
+                    <li>Regular maintenance packages</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Licensing & Documentation Detail -->
+        <div class="detail-section">
+            <div class="detail-icon">
+                <i class="fas fa-passport"></i>
+            </div>
+            <div class="detail-content">
+                <h3>Licensing & Documentation</h3>
+                <p>Navigating vehicle documentation can be complex. Our legal team handles all the paperwork to ensure your vehicle is properly registered and compliant.</p>
+                <ul class="feature-list">
+                    <li>Vehicle registration</li>
+                    <li>Insurance arrangement</li>
+                    <li>Change of ownership</li>
+                    <li>Customs clearance</li>
+                    <li>Legal compliance verification</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Vehicle Rental Detail -->
+        <div class="detail-section">
+            <div class="detail-icon">
+                <i class="fas fa-key"></i>
+            </div>
+            <div class="detail-content">
+                <h3>Vehicle & Bus Rental</h3>
+                <p>Need a reliable vehicle for short-term use? Our rental fleet is well-maintained and available for both individual and corporate needs with flexible pricing.</p>
+                <ul class="feature-list">
+                    <li>Airport pickup and drop-off</li>
+                    <li>Flexible rental periods</li>
+                    <li>Competitive rates</li>
+                    <li>Insurance included</li>
+                    <li>24/7 customer support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="services-cta">
+    <div class="container">
+        <h2>Ready to Use Our Services?</h2>
+        <p>Contact us today to discuss your automotive needs and get personalized solutions.</p>
+        <a href="{% url 'products:contact' %}" class="btn-services">Get in Touch</a>
+        <a href="{% url 'products:product-list' %}" class="btn-services">Browse Our Vehicles</a>
+    </div>
+</section>
+
+{% endblock %}
+
