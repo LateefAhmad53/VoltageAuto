@@ -8,6 +8,8 @@ services:
     startCommand: "gunicorn voltageauto.wsgi"
     autoDeploy: true
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
       - key: DJANGO_DEBUG
         value: "False"
       - key: DJANGO_ALLOWED_HOSTS
